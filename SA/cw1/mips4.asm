@@ -7,10 +7,10 @@ main:	li $v0, 6
 	syscall			#read n, f0 = x0 = n
 	mov.s $f11, $f0		#f11 = n
 	la $t0, float1
-	l.s $f10, 0($t0)	#f10 = 0.5
+	lwc1 $f10, 0($t0)	#f10 = 0.5
 	mul.s $f1, $f0, $f10	#f1 = x1 = 0.5 * x0
 	la $t0, float2
-	l.s $f2, 0($t0)		#f2 = 0.000001
+	lwc1 $f2, 0($t0)		#f2 = 0.000001
 loop:	sub.s $f3, $f0, $f1
 	abs.s $f3, $f3		#f3 = abs(x0 - x1)
 	
