@@ -13,6 +13,6 @@ int main(int argc, char const *argv[])
 {
 	int base, exponet;
 	scanf("%d %d", &base, &exponet);
-	printf("%lld", power(base, exponet));
+	printf("%lld\n", power(base, exponet));
 	return 0;
 }

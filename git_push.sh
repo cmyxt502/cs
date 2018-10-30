@@ -1,4 +1,4 @@
-git add .
+git add -A
 
 read -p "commit:"
 git commit -m $REPLY
