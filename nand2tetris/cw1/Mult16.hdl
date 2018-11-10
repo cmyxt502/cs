@@ -5,7 +5,8 @@ CHIP Mult16 {
 
     OUT 
         out-lo[16],
-        out-hi[16];
+        out-hi[16],
+        of;
 
     PARTS:
         Not16(in=a, out=naa);
@@ -34,13 +35,19 @@ CHIP Mult16 {
 		MultStep16(preout-lo=ans12-lo, preout-hi=ans12-hi, x-lo=x12-lo, x-hi=x12-hi, y=b12, xout-lo=x13-lo, xout-hi=x13-hi, out-lo=ans13-lo, out-hi=ans13-hi);
 		MultStep16(preout-lo=ans13-lo, preout-hi=ans13-hi, x-lo=x13-lo, x-hi=x13-hi, y=b13, xout-lo=x14-lo, xout-hi=x14-hi, out-lo=ans14-lo, out-hi=ans14-hi);
 		MultStep16(preout-lo=ans14-lo, preout-hi=ans14-hi, x-lo=x14-lo, x-hi=x14-hi, y=b14, xout-lo=x15-lo, xout-hi=x15-hi, out-lo=ans15-lo, out-hi=ans15-hi);
-		MultStep16(preout-lo=ans15-lo, preout-hi=ans15-hi, x-lo=x15-lo, x-hi=x15-hi, y=b15, xout-lo=x16-lo, xout-hi=x16-hi, out-lo=ans-lo, out-hi=ans-hi);
+		MultStep16(preout-lo=ans15-lo, preout-hi=ans15-hi, x-lo=x15-lo, x-hi=x15-hi, y=b15, xout-lo=x16-lo, xout-hi=x16-hi, out-lo=ans-lo, out-hi=ans-hi, out-hi[0..7]=or1, out-hi[8..15]=or2);
 
         Xor(a=a[15], b=b[15], out=sign);
-        Add16(a=ans-lo, b=true, out=anss-lo);
-        Add16(a=ans-hi, b=true, out=anss-hi);
+        Addu16(a=ans-lo, b=true, c=false, out=anss-lo, cout=c-lo);
+        Addu16(a=ans-hi, b=true, c=c-lo, out=anss-hi, cout=c-hi);
         Not16(in=anss-lo, out=nans-lo);
         Not16(in=anss-hi, out=nans-hi);
-        Mux16(a=ans-lo, b=nans-lo, sel=sign, out=out-lo);
+        Mux16(a=ans-lo, b=nans-lo, sel=sign, out=out-lo, out[15]=sign1);
         Mux16(a=ans-hi, b=nans-hi, sel=sign, out=out-hi);
+
+        Or8Way(in=or1, out=or3);
+        Or8Way(in=or2, out=or4);
+        Or(a=or3, b=or4, out=t1);
+        Xor(a=sign, b=sign1, out=t2);
+        Or(a=t1, b=t2, out=of);
 }
