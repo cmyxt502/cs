@@ -1,0 +1,43 @@
+// nx   if nx then x = Not(x) 
+// zy   if zy then y = 0 
+// ny   if ny then y = Not(y) 
+// no   if no then out = Not(out) 
+// cx   if cx then the value used for x at t+1 = out  
+// re   if re then output is reset to 0
+// op
+
+// zr =  this will be true if the output is 0 
+// ng =  this will be true if the output is negative 
+// of =  this will be true if the output exceeds the range of an 8 or 16 bit 2s complement number 
+
+CHIP cALU {
+    IN  
+        x[16], y[16], nx, zy, ny, no, cx, re, op;
+
+    OUT 
+        out[16], zr, ng, of;
+
+    PARTS:
+        Mux16(a=x, b=rout, sel=cx, out=xx);
+
+        Mux16(a=y, b=false, sel=zy, out=yy);
+
+        Not16(in=xx, out=notx);
+        Not16(in=yy, out=noty);
+        Mux16(a=xx, b=notx, sel=nx, out=xxx);
+        Mux16(a=yy, b=noty, sel=ny, out=yyy);
+
+        Addu16(a=xxx, b=yyy, c=false, out=addout, of=addof, cout=cout);
+        Mult16(a=xxx, b=yyy, out-lo=multout, out-hi=out-hi, of=multof);
+        Mux16(a=addout, b=multout, sel=op, out=outt);
+        Mux(a=addof, b=multof, sel=op, out=of);
+
+        Not16(in=outt, out=noutt);
+        Mux16(a=outt, b=noutt, sel=no, out=out1, out[15]=ng, out[0..7]=lo, out[8..15]=hi);
+        Register(in=out1, load=true, out=rout, out=out);
+
+        Or8Way(in=lo, out=zr1);
+        Or8Way(in=hi, out=zr2);
+        Or(a=zr1, b=zr2, out=nzr);
+        Not(in=nzr, out=zr);
+}

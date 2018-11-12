@@ -1,0 +1,21 @@
+CHIP MultStep16 {
+    IN  
+        preout-lo[16],
+        preout-hi[16],
+        x-lo[16],
+        x-hi[16],
+        y;
+
+    OUT 
+        xout-lo[16],
+        xout-hi[16],
+        out-lo[16],
+        out-hi[16];
+
+    PARTS:
+        Mux16(a=false, b=x-lo, sel=y, out=xx-lo);
+        Mux16(a=false, b=x-hi, sel=y, out=xx-hi);
+        Add16(a=xx-lo, b=preout-lo, out=out-lo);
+        Add16(a=xx-hi, b=preout-hi, out=out-hi);
+        lShift16(in-lo=x-lo, in-hi=x-hi, out-lo=xout-lo, out-hi=xout-hi);
+}

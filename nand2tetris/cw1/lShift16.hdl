@@ -1,0 +1,44 @@
+CHIP lShift16 {
+    IN  
+        in-lo[16],
+        in-hi[16];
+
+    OUT 
+        out-lo[16],
+        out-hi[16];
+
+    PARTS:
+        And(a=false, b=false, out=out-lo[0]);
+        And(a=in-lo[0], b=true, out=out-lo[1]);
+        And(a=in-lo[1], b=true, out=out-lo[2]);
+        And(a=in-lo[2], b=true, out=out-lo[3]);
+        And(a=in-lo[3], b=true, out=out-lo[4]);
+        And(a=in-lo[4], b=true, out=out-lo[5]);
+        And(a=in-lo[5], b=true, out=out-lo[6]);
+        And(a=in-lo[6], b=true, out=out-lo[7]);
+        And(a=in-lo[7], b=true, out=out-lo[8]);
+        And(a=in-lo[8], b=true, out=out-lo[9]);
+        And(a=in-lo[9], b=true, out=out-lo[10]);
+        And(a=in-lo[10], b=true, out=out-lo[11]);
+        And(a=in-lo[11], b=true, out=out-lo[12]);
+        And(a=in-lo[12], b=true, out=out-lo[13]);
+        And(a=in-lo[13], b=true, out=out-lo[14]);
+        And(a=in-lo[14], b=true, out=out-lo[15]);
+
+        And(a=in-lo[15], b=true, out=out-hi[0]);
+        And(a=in-hi[0], b=true, out=out-hi[1]);
+        And(a=in-hi[1], b=true, out=out-hi[2]);
+        And(a=in-hi[2], b=true, out=out-hi[3]);
+        And(a=in-hi[3], b=true, out=out-hi[4]);
+        And(a=in-hi[4], b=true, out=out-hi[5]);
+        And(a=in-hi[5], b=true, out=out-hi[6]);
+        And(a=in-hi[6], b=true, out=out-hi[7]);
+        And(a=in-hi[7], b=true, out=out-hi[8]);
+        And(a=in-hi[8], b=true, out=out-hi[9]);
+        And(a=in-hi[9], b=true, out=out-hi[10]);
+        And(a=in-hi[10], b=true, out=out-hi[11]);
+        And(a=in-hi[11], b=true, out=out-hi[12]);
+        And(a=in-hi[12], b=true, out=out-hi[13]);
+        And(a=in-hi[13], b=true, out=out-hi[14]);
+        And(a=in-hi[14], b=true, out=out-hi[15]);
+}

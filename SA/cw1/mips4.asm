@@ -26,3 +26,5 @@ loop:	sub.s $f3, $f0, $f1
 print:	mov.s $f12, $f1
 	li $v0, 2
 	syscall			#print x1
+	li $v0, 10
+	syscall

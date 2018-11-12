@@ -1,0 +1,2 @@
+for i in range(16):
+	print("MultStep16(preout-lo=ans%d-lo, preout-hi=ans%d-hi, x-lo=x%d-lo, x-hi=x%d-hi, y=b[%d], xout-lo=x%d-lo, xout-hi=x%d-hi, out-lo=ans%d-lo, out-hi=ans%d-hi);"%(i,i,i,i,i,i+1,i+1,i+1,i+1))
