@@ -1,26 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-int clamped(int max, int min, int n){
-	if (n > max){
-		return max;
-	} else if (n < min){
-		return min;
-	} else {
-		return n;
-	}
-}
+
+typedef struct Node
+{
+	int data;
+	struct Node *next;
+} node;
+
 int main(int argc, char const *argv[])
 {
-	int max, min;
-	printf("Enter max value: ");
-	scanf("%d", &max);
-	printf("Enter min value: ");
-	scanf("%d", &min);
-	int n = 0;
-	while (n != -9999){
-		printf("Enter value: ");
-		scanf("%d", &n);
-		printf("%d\n", clamped(max, min, n));
-	}
-	return 0;
+	node *list = NULL;
+	list = malloc(sizeof(node));
+	list -> data = 1;
+	list -> next = malloc(sizeof(node));
+	list -> next -> data = 2;
+	printf("%d\n", list->next->data);
 }
