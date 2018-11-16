@@ -33,8 +33,10 @@ CHIP cALU {
         Mux(a=addof, b=multof, sel=op, out=of);
 
         Not16(in=outt, out=noutt);
-        Mux16(a=outt, b=noutt, sel=no, out=out1, out[15]=ng, out[0..7]=lo, out[8..15]=hi);
-        Register(in=out1, load=true, out=rout, out=out);
+        Mux16(a=outt, b=noutt, sel=no, out=out1);
+
+        Mux16(a=out1, b=false, sel=re, out=out2, out[15]=ng, out[0..7]=lo, out[8..15]=hi);
+        Register(in=out2, load=true, out=rout, out=out);
 
         Or8Way(in=lo, out=zr1);
         Or8Way(in=hi, out=zr2);
