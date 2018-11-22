@@ -8,7 +8,7 @@
 //  z = z + 1
 //  goto LOOP
 //STOP:
-//  if 2 * x + y > 0
+//  if 2 * x + y < 0
 //    goto F1
 //  else
 //    goto F2
@@ -50,7 +50,7 @@ D=D+M
 @y
 D=D+M
 @F1
-D;JGT
+D;JLT
 @F2
 0;JMP
 
@@ -58,12 +58,13 @@ D;JGT
 @z
 D=M
 @2
-M=D+1   //R2 = z + 1
+M=D     //R2 = z
 @END
 0;JMP
 
 (F2)
 @z
+M=M+1   //z = z + 1
 D=M
 @2
 M=D     //R2 = z
