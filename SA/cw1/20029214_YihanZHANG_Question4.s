@@ -1,6 +1,7 @@
         .data
 float1: .float 0.5
 float2: .float 0.000001
+new:    .asciiz "\n"
         .text
         .globl main
 main:   li $v0, 6
@@ -26,5 +27,8 @@ loop:   sub.s $f3, $f0, $f1
 print:  mov.s $f12, $f1
         li $v0, 2
         syscall                 #print x1
+        la $a0, new
+        li $v0, 4
+        syscall                 #print on a new line
         li $v0, 10
         syscall
