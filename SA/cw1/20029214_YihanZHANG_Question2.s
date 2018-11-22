@@ -1,15 +1,55 @@
 	.data
 str1:	.asciiz "overflow"
+inv:	.asciiz "Invalid Input!"
+str2:	.space 64
+str3:	.space 64
 	.text
 	.globl main
-main:	li $v0, 5
+main:	la $a0, str2
+	li $a1, 64
+	li $v0, 8
 	syscall
-	move $s0, $v0
-	li $v0, 5
+	la $a0, str3
+	li $a1, 64
+	li $v0, 8
 	syscall
-	move $s1, $v0
+	#get sign
+	la $t7, str2
+	lbu $t1, 0($t7)
+	bne $t1, 45, else1	#if the first char of x is '-', abandon it for further formal check
+	addi $t7, $t7, 1
+else1:	la $t8, str3
+	lbu $t2, 0($t8) 
+	bne $t2, 45, while1	#if the first char of y is '-', abandon it for further formal check
+	addi $t8, $t8, 1
 	
-	#calculate square of x 
+while1:	lbu $t5, 0($t7)		#get 1st char of string
+	addi $t5, $t5, -48	#change the ascii code into integer
+	blt $t5, 0, invalid
+	bgt $t5, 9, invalid	#if the char isn't between 0 and 9, consider it's an invalid integer
+	mul $s0, $s0, 10
+	add $s0, $s0, $t5	#after converting to integer, add it to x (s0)
+	addi $t7, $t7, 1	#point string to next char
+	lbu $t6, 0($t7)
+	bne $t6, 10, while1	#while not reach the end of the string('\n'), do loop again
+	
+while2:	lbu $t5, 0($t8)		#get 1st char of string
+	addi $t5, $t5, -48	#change the ascii code into integer
+	blt $t5, 0, invalid
+	bgt $t5, 9, invalid	#if the char isn't between 0 and 9, consider it's an invalid integer
+	mul $s1, $s1, 10
+	add $s1, $s1, $t5	#after converting to integer, add it to y (s1)
+	addi $t8, $t8, 1	#point string to next char
+	lbu $t6, 0($t8)
+	bne $t6, 10, while2	#while not reach the end of the string('\n'), do loop again
+	
+main1:	#process the sign of x
+	bne $t1, 45, else2	#if the ascii code of str2's first char is 45 ('-'), x = -x
+	sub $s0, $zero, $s0
+else2:	#process the sign of y
+	bne $t2, 45, else3	#if the ascii code of str3's first char is 45 ('-'), y = -y
+	sub $s1, $zero, $s1
+else3:	#calculate square of x 
 	mult $s0, $s0
 	mflo $s2	#storge square of x
 	mfhi $a0
@@ -121,4 +161,8 @@ error:
 	li $v0, 4
 	syscall
 	li $v0, 10
+	syscall
+invalid:
+	la $a0, inv
+	li $v0, 4
 	syscall
