@@ -13,9 +13,10 @@
 //  else
 //    goto F2
 //F1:
-//  R2 = z + 1
+//  R2 = z
 //F2:
-//  R2 = z 
+//  z = z + 1
+//  R2 = z
 //END:
 //  goto END
 
@@ -50,9 +51,9 @@ D=D+M
 @y
 D=D+M
 @F1
-D;JLT
+D;JLT   //if 2 * x + y < 0 goto F1
 @F2
-0;JMP
+0;JMP   //else goto F2
 
 (F1)
 @z

@@ -126,3 +126,34 @@ output;
 tock,
 output;
 
+//Compute x * y
+set x %B0000000000000010,
+set y %B0000000000000100,
+set nx 0,
+set zy 0,
+set ny 0,
+set no 0,
+set cx 0,
+set re 0,
+set op 1,
+eval,
+tick,
+output;
+tock,
+output;
+
+//Compute x * y
+set x %B1111111111111110,
+set y %B0000000000000100,
+set nx 0,
+set zy 0,
+set ny 0,
+set no 0,
+set cx 0,
+set re 0,
+set op 1,
+eval,
+tick,
+output;
+tock,
+output;

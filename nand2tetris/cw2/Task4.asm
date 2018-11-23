@@ -1,8 +1,55 @@
 //x in RAM[0], operation code in RAM[1], y in RAM[2], '=' in RAM[3] and the result z in RAM[4]
 
-
-
+//BEGIN:
+//  GET_x:
+//    if RAM[24576] - 48 < 0 goto GET_x
+//    RAM[0] = RAM[24576] - 48
+//
+//  GET_operator:
+//    if RAM[24576] - 42 < 0 goto GET_operator
+//    if RAM[24576] - 47 > 0 goto GET_operator
+//    RAM[1] = RAM[24576]
+//
+//  GET_y:
+//    if RAM[24576] - 48 < 0 goto GET_y
+//    RAM[2] = RAM[24576] - 48
+//
+//  GET_equal:
+//    if RAM[24576] - 61 != 0 goto GET_equal
+//    RAM[3] = 5
+//
+//  PLUS:
+//    if RAM[1] != 43 goto MINUS
+//    RAM[1] = 1
+//    RAM[4] = RAM[0] + RAM[2]
+//    goto END
+//
+//  MINUS:
+//    if RAM[1] != 45 goto MULTIPLY
+//    RAM[1] = 2
+//    RAM[4] = RAM[0] - RAM[2]
+//    goto END
+//
+//  MULTIPLY:
 //    z = 0
+//    x = RAM[0]
+//    y = RAM[2]
+//    if RAM[1] != 42 goto DEVIDE
+//    RAM[1] = 3
+//  MULTSUB:
+//    if x <= 0 goto ENDMULT
+//    x = x - 1
+//    z = z + y
+//    goto MULTSUB
+//  ENDMULT:
+//    RAM[4] = z
+//    goto END
+//
+//  DEVIDE:
+//    z = 0
+//    x = RAM[0]
+//    y = RAM[2]
+//    RAM[1] = 4
 //  LOOP:
 //    x = x - y
 //    if y < 0 goto STOP
@@ -14,9 +61,11 @@
 //    else
 //      goto F2
 //  F1:
-//    R2 = z + 1
+//    RAM[4] = z
 //  F2:
-//    R2 = z 
+//    z = z + 1
+//    RAM[4] = z
+//
 //  END:
 //    goto BEGIN
 
@@ -28,9 +77,9 @@ D=M
 @48
 D=D-A
 @GET_x
-D;JLT
+D;JLT   //loop while the input char is not a number
 @0
-M=D
+M=D     //store input number into RAM[0]
 
 (GET_operator)
 @24576
@@ -38,15 +87,15 @@ D=M
 @42
 D=D-A
 @GET_operator
-D;JLT
+D;JLT   //loop while the input less than '*'
 @6
 D=D-A
 @GET_operator
-D;JGE
+D;JGE   //loop while the input greater than '/'
 @48
 D=D+A
 @1
-M=D
+M=D     //store the ascii code of operator into RAM[1]
 
 (GET_y)
 @24576
@@ -54,9 +103,9 @@ D=M
 @48
 D=D-A
 @GET_y
-D;JLT
+D;JLT   //loop while the input char is not a number
 @2
-M=D
+M=D     //store input number into RAM[2]
 
 (GET_equal)
 @24576
@@ -64,11 +113,11 @@ D=M
 @61
 D=D-A
 @GET_equal
-D;JNE
+D;JNE   //loop while the input char is not equal to '='
 @5
 D=A
 @3
-M=D
+M=D     //RAM[3] = 5
 
 (PLUS)
 @1
@@ -84,9 +133,9 @@ D=M
 @2
 D=D+M
 @4
-M=D     //R4(z) = R0(x) + R1(y)
+M=D     //R4 (z) = R0 (x) + R2 (y)
 @END
-0;JMP
+0;JMP   //goto END
 
 (MINUS)
 @1
@@ -104,9 +153,9 @@ D=M
 @2
 D=D-M
 @4
-M=D     //R4(z) = R0(x) - R1(y)
+M=D     //R4 (z) = R0 (x) - R2 (y)
 @END
-0;JMP
+0;JMP   //goto END
 
 (MULTIPLY)
 @z
@@ -132,31 +181,27 @@ D=A
 M=D     //R1 = 3
 
 (MULTSUB)
-@0
-D=M-1
-@ENDMULT
-D;JLT
-
-@0
-M=M-1
-@2
-D=M
-@z
-M=M+D
-@MULTSUB
-0;JMP
-
-(ENDMULT)
 @x
 D=M
-@0
-M=D
+@ENDMULT
+D;JLE   //if x <= 0 goto ENDMULT
+
+@x
+M=M-1   //x = x - 1
+@y
+D=M
+@z
+M=M+D   //z = z + y
+@MULTSUB
+0;JMP   //goto MULTSUB
+
+(ENDMULT)
 @z
 D=M
 @4
-M=D
+M=D     //RAM[4] = z
 @END
-0;JMP
+0;JMP   //goto END
 
 (DEVIDE)
 @z
@@ -170,8 +215,6 @@ D=M
 @y
 M=D     //y = RAM[2]
 
-@1
-D=M
 @4
 D=A
 @1
@@ -197,9 +240,9 @@ D=D+M
 @y
 D=D+M
 @F1
-D;JLT
+D;JLT   //if 2 * x + y < 0 goto F1
 @F2
-0;JMP
+0;JMP   //else goto F2
 
 (F1)
 @z
@@ -220,4 +263,4 @@ M=D     //R4 = z
 
 (END)
 @BEGIN
-0;JMP   //goto END
+0;JMP   //goto BEGIN
