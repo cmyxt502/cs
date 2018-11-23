@@ -1,6 +1,7 @@
         .data
-str1:   .asciiz "overflow"
-inv:    .asciiz "Invalid Input!"
+str1:   .asciiz "overflow\n"
+inv:    .asciiz "Invalid Input!\n"
+new:    .asciiz "\n"
 str2:   .space 64
 str3:   .space 64
         .text
@@ -134,6 +135,9 @@ else3:  #calculate square of x
         li $v0, 1
         syscall
         
+		la $a0, new
+        li $v0, 4
+        syscall                 #print on a new line
         li $v0, 10
         syscall
 check_mult_overflow:
@@ -165,4 +169,6 @@ error:
 invalid:
         la $a0, inv
         li $v0, 4
+        syscall
+        li $v0, 10
         syscall

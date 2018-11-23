@@ -1,6 +1,6 @@
         .data
 new:    .asciiz "\n"
-inv:    .asciiz "Invalid Input!"
+inv:    .asciiz "Invalid Input!\n"
 string: .space 64
 blank:  .asciiz " "
         .text
