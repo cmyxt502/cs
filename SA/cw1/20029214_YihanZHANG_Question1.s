@@ -1,14 +1,18 @@
         .data
 new:    .asciiz "\n"
+str1:   .asciiz "Input a possitive number: "
 inv:    .asciiz "Invalid Input!\n"
 string: .space 64
 blank:  .asciiz " "
         .text
         .globl main
-main:   la $a0, string
+main:   la $a0, str1
+        li $v0, 4
+        syscall
+        la $a0, string
         li $a1, 64
         li $v0, 8
-        syscall
+        syscall                 #input a string
         move $s1, $zero
         addi $s1, $s1, 1        #s1 = 1
 while:  lbu $t5, 0($a0)         #get 1st char of string

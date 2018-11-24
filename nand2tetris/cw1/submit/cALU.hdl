@@ -1,0 +1,48 @@
+// nx   if nx then x = Not(x) 
+// zy   if zy then y = 0 
+// ny   if ny then y = Not(y) 
+// no   if no then out = Not(out) 
+// cx   if cx then the value used for x at t+1 = out  
+// re   if re then output is reset to 0
+// op
+
+// zr =  this will be true if the output is 0 
+// ng =  this will be true if the output is negative 
+// of =  this will be true if the output exceeds the range of an 8 or 16 bit 2s complement number 
+
+CHIP cALU {
+    IN  
+        x[16], y[16], nx, zy, ny, no, cx, re, op;
+
+    OUT 
+        out[16], zr, ng, of;
+
+    PARTS:
+        //if cx, x at t+1 = out
+        Mux16(a=x, b=rout, sel=cx1, out=xx);
+        //if zy, y = 0
+        Mux16(a=y, b=false, sel=zy, out=yy);
+
+        Not16(in=xx, out=notx);
+        Not16(in=yy, out=noty);
+        Mux16(a=xx, b=notx, sel=nx, out=xxx);   //if nx, x = Not(x)
+        Mux16(a=yy, b=noty, sel=ny, out=yyy);   //if ny, y = Not(y)
+
+        Addu16(a=xxx, b=yyy, c=false, out=addout, of=addof, cout=cout);
+        Mult16(a=xxx, b=yyy, out-lo=multout, out-hi=out-hi, of=multof);
+        Mux16(a=addout, b=multout, sel=op, out=outt);   //if op = 0 then do x + y; else do x * y
+        Mux(a=addof, b=multof, sel=op, out=of1);        //select 'of' by checking pin 'op'
+        Mux(a=of1, b=false, sel=re, out=of);            //if re then of = 0
+
+        Not16(in=outt, out=noutt);
+        Mux16(a=outt, b=noutt, sel=no, out=out1);       //if no then out = Not(out)
+
+        Mux16(a=out1, b=false, sel=re, out=out2, out[15]=ng, out[0..7]=lo, out[8..15]=hi);  //if re then out = false
+        Register(in=out2, load=true, out=rout, out=out);    //put out into Register gate
+        Bit(in=cx, load=true, out=cx1);                     //put cx into Bin gate
+
+        Or8Way(in=lo, out=zr1);
+        Or8Way(in=hi, out=zr2);
+        Or(a=zr1, b=zr2, out=nzr);
+        Not(in=nzr, out=zr);        //if all bit in out is 0, zr = 1
+}

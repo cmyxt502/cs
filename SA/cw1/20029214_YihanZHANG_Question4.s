@@ -1,10 +1,14 @@
         .data
+str1:   .asciiz "Input a non-nagetive real number: "        
 float1: .float 0.5
 float2: .float 0.000001
 new:    .asciiz "\n"
         .text
         .globl main
-main:   li $v0, 6
+main:   la $a0, str1
+        li $v0, 4
+        syscall
+        li $v0, 6
         syscall                 #read n, f0 = x0 = n
         mov.s $f11, $f0         #f11 = n
         la $t0, float1
