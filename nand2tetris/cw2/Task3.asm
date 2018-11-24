@@ -28,10 +28,67 @@ D=M
 M=D     //x = RAM[0]
 @1
 D=M
+@INVALID
+D;JEQ   //if y = 0 goto INVALID
 @y
 M=D     //y = RAM[1]
 
+@x
+D=M
+@NAGETIVEx
+D;JLT
+@PROCESSy
+0;JMP
+(NAGETIVEx)
+D=!D
+@x
+M=D+1
+
+(PROCESSy)
+@y
+D=M
+@NAGETIVEy
+D;JLT
+@ELSE1
+0;JMP
+(NAGETIVEy)
+D=!D
+@y
+M=D+1
+
+@0
+D=M
+@ELSE1
+D;JGE   //if R0 >= 0 goto ELSE1
+@1
+D=M
+@ELSE1
+D;JGE   //if R1 >= 0 goto ELSE1
+@sign
+M=0
+@LOOP
+0;JMP
+
+(ELSE1)
+@0
+D=M
+@ELSE2
+D;JLT   //if R0 < 0 goto ELSE2
+@1
+D=M
+@ELSE2
+D;JLT   //if R1 < 0 goto ELSE2
+@sign
+M=0
+@LOOP
+0;JMP
+
+(ELSE2)
+@sign
+M=1
+
 (LOOP)
+
 @y
 D=M
 @x
@@ -71,6 +128,10 @@ D=M
 M=D     //R2 = z
 @END
 0;JMP
+
+(INVALID)
+@2
+M=0
 
 (END)
 @END

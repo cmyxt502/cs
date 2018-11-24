@@ -13,9 +13,10 @@ CHIP MultStep16 {
         out-hi[16];
 
     PARTS:
+        //if y = 0 then plus 0 * x, else plus previous answer with x
         Mux16(a=false, b=x-lo, sel=y, out=xx-lo);
         Mux16(a=false, b=x-hi, sel=y, out=xx-hi);
-        Add16(a=xx-lo, b=preout-lo, out=out-lo);
-        Add16(a=xx-hi, b=preout-hi, out=out-hi);
-        lShift16(in-lo=x-lo, in-hi=x-hi, out-lo=xout-lo, out-hi=xout-hi);
+        Addu16(a=xx-lo, b=preout-lo, c=false, out=out-lo, cout=clo);
+        Addu16(a=xx-hi, b=preout-hi, c=clo, out=out-hi);
+        lShift16(in-lo=x-lo, in-hi=x-hi, out-lo=xout-lo, out-hi=xout-hi);      //shift left x
 }

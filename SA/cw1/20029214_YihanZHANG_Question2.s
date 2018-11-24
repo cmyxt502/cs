@@ -1,4 +1,7 @@
         .data
+strx:   .asciiz "Input x: "
+stry:   .asciiz "Input y: "
+strr:   .asciiz "Result: "
 str1:   .asciiz "overflow\n"
 inv:    .asciiz "Invalid Input!\n"
 new:    .asciiz "\n"
@@ -6,14 +9,20 @@ str2:   .space 64
 str3:   .space 64
         .text
         .globl main
-main:   la $a0, str2
+main:   la $a0, strx
+        li $v0, 4
+        syscall
+        la $a0, str2
         li $a1, 64
         li $v0, 8
+        syscall                 #input x
+        la $a0, stry
+        li $v0, 4
         syscall
         la $a0, str3
         li $a1, 64
         li $v0, 8
-        syscall
+        syscall                 #input y
         #get sign
         la $t7, str2
         lbu $t1, 0($t7)
@@ -131,11 +140,14 @@ else3:  #calculate square of x
         move $a2, $s7
         jal check_addu_overflow
         
+        la $a0, strr
+        li $v0, 4
+        syscall
         move $a0, $t0
         li $v0, 1
         syscall
         
-		la $a0, new
+	la $a0, new
         li $v0, 4
         syscall                 #print on a new line
         li $v0, 10
