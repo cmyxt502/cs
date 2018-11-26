@@ -1,26 +1,31 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct NODE
 {
 	int data;
-	struct NODE *next = NULL;
+	struct NODE *next;
 } node;
 
-int list_append(**node head, int n)
+void list_insert(node** head, int n)
 {
 	node *tmp = malloc(sizeof(node));
-	if (*head == NULL){
+	node *cur = *head;
+	if (cur == NULL){
+		tmp->data = n;
+		tmp->next = NULL;
 		*head = tmp;
+		return;
 	}
-	*tmp = **head;
-	*head->next = tmp;
-	*head->data = n;
+	*tmp = *cur;
+	cur->next = tmp;
+	cur->data = n;
 }
 
-int print_list(*node head)
+void print_list(node* head)
 {
 	node *cur = malloc(sizeof(node)); 
-	cur = *node;
+	cur = head;
 	while (cur)
 	{
 		printf("%d\n", cur->data);
@@ -30,13 +35,15 @@ int print_list(*node head)
 
 int main(int argc, char const *argv[])
 {
-	node *head = malloc(sizeof(node));
+	node *head = NULL;
 	int n = 1;
 	while (n != 0)
 	{
-		printf("Value: \n");
-		scanf("%d", n);
-		list_append(&head, n);
+		printf("Value: ");
+		scanf("%d", &n);
+		if (n != 0){
+			list_insert(&head, n);
+		}
 	}
 	print_list(head);
 	return 0;
